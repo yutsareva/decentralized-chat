@@ -3,14 +3,18 @@ from enctyption import generate_key
 
 
 class Config:
-    def __init__(self, name, peer_addresses: list[str], chats_to_secret_keys: dict):
+    def __init__(self, name, peer_addresses: list[str], chats_to_secret_keys: dict, port: int):
         self.name = name
         self.chats_to_secret_keys = chats_to_secret_keys
         self.peer_addresses = peer_addresses
+        self.port = port
+
+    def peers(self):
+        pass
+        # TODO return address, port per peer
 
 
-async def get_config():
-    print('hi')
+async def get_config(port: int):
     await aprint(">>> Print your name")
     name = await ainput("you >")
 
@@ -45,4 +49,4 @@ async def get_config():
         await aprint(f">>> {secret_key.decode('utf-8')}")
         chats_to_secret_keys[chat_name] = secret_key
 
-    return Config(name, peer_addresses, chats_to_secret_keys)
+    return Config(name, peer_addresses, chats_to_secret_keys, port)
