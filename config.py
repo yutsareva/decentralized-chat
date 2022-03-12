@@ -6,12 +6,16 @@ class Config:
     def __init__(self, name, peer_addresses: list[str], chats_to_secret_keys: dict, port: int):
         self.name = name
         self.chats_to_secret_keys = chats_to_secret_keys
-        self.peer_addresses = peer_addresses
+        self.peer_addresses = []
+        for peer_address in peer_addresses:
+            self.peer_addresses.append(peer_address.split(':'))
         self.port = port
+        self.active_chat = ""
+        self.peer_ws = {}
 
-    def peers(self):
-        pass
-        # TODO return address, port per peer
+
+global config
+config = None
 
 
 async def get_config(port: int):
@@ -20,17 +24,17 @@ async def get_config(port: int):
 
     peer_addresses = []
     while True:
-        await aprint(">>> Print known peer address; print 'no' if no known peers left")
+        await aprint(">>> Print known peer address; press ENTER if no known peers left")
         peer_address = await ainput(f"{name} > ")
-        if peer_address == 'no':
+        if not peer_address:
             break
         peer_addresses.append(peer_address)
 
     chats_to_secret_keys = {}
     while True:
-        await aprint(">>> Print existing chat name and its secret key separated by a space; print 'no' if no chats left")
+        await aprint(">>> Print existing chat name and its secret key separated by a space; press ENTER if no chats left")
         new_chat = await ainput(f"{name} > ")
-        if new_chat == 'no':
+        if not new_chat:
             break
         chat_name, secret_key = new_chat.split()
         secret_key_length = 32
@@ -40,9 +44,9 @@ async def get_config(port: int):
 
         chats_to_secret_keys[chat_name] = secret_key
     while True:
-        await aprint(">>> Do you want to start a new chat? Enter unique chat name if yes, else print 'no'")
+        await aprint(">>> Do you want to start a new chat? Enter unique chat name if yes, else press ENTER")
         chat_name = await ainput(f"{name} > ")
-        if chat_name == 'no':
+        if not chat_name:
             break
         secret_key = generate_key()
         await aprint(">>> Your key:")
