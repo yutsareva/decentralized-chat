@@ -1,0 +1,22 @@
+{
+  "chats": [
+    {
+      "name": "study chat",
+      "id": "d48d411c-8c10-4d99-8c81-96c64097b80b",
+      "secret": "y8XeBsuZqcyFugl_LVwUjiZoH7K6RTc6f6G3I8illJA="
+    },
+    {
+      "name": "work chat",
+      "id": "dee3ab1c-2f13-4262-8545-f317c8c66181",
+      "secret": "ISyQCQxuvy8_cg1KrWCj23g9HFlt0DQqNl5MyZ6uWzk="
+    }
+  ],
+  "peers": [
+    {
+      "address": "127.0.0.1",
+      "port": 12345
+    }
+  ],
+  "name": "Bob",
+  "port": 12346
+}

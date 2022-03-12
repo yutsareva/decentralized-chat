@@ -1,0 +1,12 @@
+{
+  "chats": [
+    {
+      "name": "work chat",
+      "id": "dee3ab1c-2f13-4262-8545-f317c8c66181",
+      "secret": "ISyQCQxuvy8_cg1KrWCj23g9HFlt0DQqNl5MyZ6uWzk="
+    }
+  ],
+  "peers": [],
+  "name": "Bob",
+  "port": 12348
+}
