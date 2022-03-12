@@ -31,14 +31,12 @@ async def main():
             continue
         # TODO: allow user to change active chat
         request = {
+            'type': 'MESSAGE',
             'name': state.state.config.name,
             'message': message,
             'port': state.state.config.port
         }
-        send_tasks = []
-        for address, ws in state.state.peer_ws.items():
-            print(f"send to {address}: {request}")
-            send_tasks.append(asyncio.create_task(handle_send(ws, json.dumps(request))))
+        await state.state.broadcast(request)
 
 
 if __name__ == "__main__":

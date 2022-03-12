@@ -1,5 +1,8 @@
+import asyncio
+import json
+
 from config import Config, get_config_from_file
-from network import connect
+from network import connect, handle_send
 import sys
 
 
@@ -21,8 +24,31 @@ class State:
         connect_address = f"{address}:{port}"
         if connect_address in self.peer_ws:
             return
+        await self.broadcast_new_peer_info(address, port)
         ws = await connect(address, port)
         self.peer_ws[connect_address] = ws
+        request = {
+            'type': 'PING',
+            'port': self.config.port
+        }
+        asyncio.create_task(handle_send(ws, json.dumps(request)))
+
+    async def broadcast_new_peer_info(self, address, port):
+        request = {
+            "type": "NEW_PEER",
+            "port": self.config.port,
+            "peer": {
+                "address": address,
+                "port": port
+            }
+        }
+        await self.broadcast(request)
+
+    async def broadcast(self, request):
+        for address, ws in self.peer_ws.items():
+            print(f"send to {address}: {request}")
+            asyncio.create_task(handle_send(ws, json.dumps(request)))
+
 
 
 state = None
