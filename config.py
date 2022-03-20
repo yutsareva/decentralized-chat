@@ -1,5 +1,7 @@
-from aioconsole import ainput, aprint
-from enctyption import generate_key
+# from aioconsole import ainput, aprint
+from typing import List
+
+# from enctyption import generate_key
 import aiofiles
 from dataclasses import dataclass
 import json
@@ -18,12 +20,12 @@ class Peer:
     port: int
 
 
+@dataclass
 class Config:
-    def __init__(self, name: str, port: int, chats: list[Chat], peers: list[Peer]):
-        self.name = name
-        self.port = port
-        self.chats = chats
-        self.peers = peers
+    name: str
+    port: str
+    chats: List[Chat]
+    peers: List[Peer]
 
 
 async def get_config_from_file(filename: str):

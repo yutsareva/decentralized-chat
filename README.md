@@ -13,3 +13,7 @@ Broadcast algorithm:
    (via Bloom filter, which updates every 10 min)
 
 
+How to run:
+```bash
+python3 main.py --config config_examples/alice.json
+```
