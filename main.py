@@ -51,13 +51,13 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.debug:
-        # root = logging.getLogger()
-        # root.setLevel(logging.DEBUG)
+        root = logging.getLogger()
+        root.setLevel(logging.DEBUG)
         logging.debug('Set debug logging')
 
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(state.initialize_state(args.config))
+    loop.run_until_complete(asyncio.wait([state.initialize_state(args.config)]))
 
-    loop.create_task(serve())
+    loop.run_until_complete(serve())
     loop.create_task(main())
     loop.run_forever()

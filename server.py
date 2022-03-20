@@ -41,12 +41,8 @@ async def handle_receive(websocket):
         logging.debug('Failed get message fromm socket: ', ex)
 
 
-async def serve():
+def serve():
     import os
     my_ip = os.popen('curl -s ifconfig.me').readline()
-    await aprint(f"start server on {my_ip}:{state.state.config.port}")
-    try:
-        async with websockets.serve(handle_receive, "127.0.0.1", state.state.config.port):
-            await asyncio.Future()
-    except Exception as ex:
-        logging.error(f'Failed to run server: {ex}')
+    logging.debug(f"start server on {my_ip}:{state.state.config.port}")
+    return websockets.serve(handle_receive, "127.0.0.1", state.state.config.port)
