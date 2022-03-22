@@ -1,5 +1,8 @@
 # Decentralized chat with trash traffic
 
+Idea: every peer gets all messages from her connectivity component.
+Belonging to a chat room is equivalent to knowing the chat room secret key the messages are encrypted with.
+
 Scenario: 
 1. User, who knows at least one peer address, starts a server and sends the peer his address
 2. The peer broadcasts new user address to all known peers
@@ -8,10 +11,15 @@ Scenario:
 5. Everyone who knows the secret key (therefore belongs to the chat room) can decrypt the message
 6. A user can belong to several chats (know several secret keys)
 
-Broadcast algorithm:
+Broadcast algorithm (partially implemented):
+- Gossip
 - When a peer gets a broadcast message, it checks if he got it earlier
    (via Bloom filter, which updates every 10 min)
 
+Persistence (not implemented yet):
+- Store chat history in ipfs
+- To recover chat history a user should remember chat data hash and at least one peer should hold the chat file in ipfs
+- Chat history is encrypted with the chat secret key
 
 How to run:
 ```bash
