@@ -13,7 +13,7 @@ Scenario:
 
 Broadcast algorithm (partially implemented):
 - Gossip
-- When a peer gets a broadcast message, it checks if he got it earlier
+- When a peer gets a broadcast message, she checks if the message was received earlier
    (via Bloom filter, which updates every 10 min)
 
 Persistence (not implemented yet):

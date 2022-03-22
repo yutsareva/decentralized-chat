@@ -45,4 +45,4 @@ def serve():
     import os
     my_ip = os.popen('curl -s ifconfig.me').readline()
     logging.debug(f"start server on {my_ip}:{state.state.config.port}")
-    return websockets.serve(handle_receive, "127.0.0.1", state.state.config.port)
+    return websockets.serve(handle_receive, "0.0.0.0", state.state.config.port)
