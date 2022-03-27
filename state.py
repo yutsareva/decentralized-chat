@@ -7,10 +7,10 @@ from enctyption import encrypt_request, Encryptor
 from history import save_msg
 from network import connect, handle_send
 
-
 INSIDE_MENU = False
 STOP = False
 loop = None
+
 
 class State:
     def __init__(self, config: Config):
@@ -31,6 +31,12 @@ class State:
     def find_chat(self, chat_name):
         for chat in self.config.chats:
             if chat.name == chat_name:
+                return chat
+        return None
+
+    def find_chat_by_id(self, id):
+        for chat in self.config.chats:
+            if chat.id == id:
                 return chat
         return None
 
@@ -56,7 +62,8 @@ class State:
                 'type': 'PING',
                 'port': self.config.port
             }
-            asyncio.create_task(handle_send(ws, json.dumps(request)))
+            # asyncio.create_task(handle_send(ws, json.dumps(request)))
+            await handle_send(ws, json.dumps(request))
         except OSError as err:
             logging.debug(f"OS error: {err}")
 
@@ -74,17 +81,18 @@ class State:
     async def broadcast(self, request):
         if request['type'] == 'MESSAGE':
             encrypted_request = encrypt_request(request, self.active_chat, self.encryptor)
-            await save_msg(encrypted_request, request['id'])
+            if 'get_history' not in request:
+                await save_msg(encrypted_request['encrypted'], request['id'])
             request = encrypted_request
 
-        for address, ws in self.peer_ws.items():
+        for address in list(self.peer_ws.keys()):
             try:
                 logging.debug(f'Sending request to {address}: {request}')
                 # asyncio.create_task(handle_send(ws, json.dumps(request)))
-                await handle_send(ws, json.dumps(request))
+                await handle_send(self.peer_ws[address], json.dumps(request))
             except Exception as err:
                 logging.debug(f"Failed to broadcast msg: {err}")
-                del self.peer_ws[address]
+                self.peer_ws.pop(address)
                 hostname, port = address.split(':')
                 await self.add_peer(hostname, port)
 
@@ -96,4 +104,3 @@ async def initialize_state(config_file_name: str):
     global state
     state = State(await get_config_from_file(config_file_name))
     await state.connect_peers()
-

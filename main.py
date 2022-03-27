@@ -1,5 +1,6 @@
 import argparse
 import asyncio
+import datetime
 import logging
 import signal
 
@@ -33,6 +34,7 @@ async def main():
                 continue
             request = {
                 'type': 'MESSAGE',
+                'time': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 'name': state.state.config.name,
                 'message': message,
                 'port': state.state.config.port,

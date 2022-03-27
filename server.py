@@ -4,7 +4,7 @@ import websockets
 
 from console import print_peer_msg
 from enctyption import decrypt_message
-from history import save_msg
+from history import save_msg, send_history, update_history
 import state
 
 
@@ -18,7 +18,13 @@ async def handle_receive(websocket):
                     decrypted = decrypt_message(j['encrypted'], state.state.encryptor)
                     if not decrypted:
                         continue
-                    await save_msg(j, file_name=decrypted['id'])
+                    if 'get_history' in decrypted:
+                        address, port = websocket.remote_address
+                        await state.state.add_peer(address, decrypted['port'])
+                        await send_history(decrypted['id'])
+                        continue
+
+                    await save_msg(j['encrypted'], file_name=decrypted['id'])
                     j.update(decrypted)
                     address, port = websocket.remote_address
                     if state.state.active_chat.id == j['id']:
@@ -35,6 +41,12 @@ async def handle_receive(websocket):
                 elif j['type'] == 'PING':
                     address, _ = websocket.remote_address
                     await state.state.add_peer(address, j['port'])
+                elif j['type'] == 'HISTORY':
+                    # decrypted = decrypt_message(j['encrypted'], state.state.encryptor)
+                    # if not decrypted:
+                    #     continue
+                    # await update_history(decrypted)
+                    await update_history(j)
             except Exception as ex:
                 logging.debug('Failed to handle message: ', ex)
     except Exception as ex:

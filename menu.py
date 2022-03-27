@@ -14,15 +14,14 @@ async def handle_menu_input(message):
             logging.debug('Invalid menu msg: ', ex)
             return
         state.state.set_active_chat(chat_name)
-        state.INSIDE_MENU = False
-        return
-    # if message.startswith('load history'):
-    #     try:
-    #         _, _, chat_name = message.split(" ", 2)
-    #     except Exception as ex:
-    #         logging.debug('Invalid menu msg: ', ex)
-    #         return
-    #     state.state.set_active_chat(chat_name)
-    #     state.INSIDE_MENU = False
-    #     return
+    elif message == 'load history':
+        request = {
+            'type': 'MESSAGE',
+            'get_history': True,
+            'port': state.state.config.port,
+            'id': state.state.active_chat.id
+        }
+        await state.state.broadcast(request)
+    state.INSIDE_MENU = False
+    return
 
