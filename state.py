@@ -75,16 +75,16 @@ class State:
         if request['type'] == 'MESSAGE':
             request = encrypt_request(request, self.active_chat, self.encryptor)
 
-            for address, ws in self.peer_ws.items():
-                try:
-                    logging.debug(f'Sending request to {address}: {request}')
-                    # asyncio.create_task(handle_send(ws, json.dumps(request)))
-                    await handle_send(ws, json.dumps(request))
-                except Exception as err:
-                    logging.debug(f"Failed to broadcast msg: {err}")
-                    del self.peer_ws[address]
-                    hostname, port = address.split(':')
-                    await self.add_peer(hostname, port)
+        for address, ws in self.peer_ws.items():
+            try:
+                logging.debug(f'Sending request to {address}: {request}')
+                # asyncio.create_task(handle_send(ws, json.dumps(request)))
+                await handle_send(ws, json.dumps(request))
+            except Exception as err:
+                logging.debug(f"Failed to broadcast msg: {err}")
+                del self.peer_ws[address]
+                hostname, port = address.split(':')
+                await self.add_peer(hostname, port)
 
 
 state = None

@@ -11,7 +11,7 @@ PEER_MSG = "\33[2K\r" + COLOR + "{name} > " + CEND + "{message}"
 
 MESSAGE_MENU_WAIT_STR = f"you > "
 MENU_STR = "\33[2K\r>>> To change chat print 'chat CHAT_NAME'" + \
-    "\n>>> To exit print 'exit'"
+           "\n>>> To exit print 'exit'"
 
 
 async def print_peer_msg(peer_name, address, port, port2, message):
@@ -27,7 +27,6 @@ async def get_user_msg():
 
 async def print_menu():
     await aprint(MENU_STR, end=f"\n{MESSAGE_MENU_WAIT_STR}")
-    # return await ainput(MESSAGE_MENU_WAIT_STR)
 
 
 def print_menu_sync():

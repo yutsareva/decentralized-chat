@@ -23,10 +23,8 @@ async def handle_menu_input(message):
             _, chat_name = message.split(" ", 1)
         except Exception as ex:
             logging.debug('Invalid menu msg: ', ex)
-            await print_menu()
             return
         state.state.set_active_chat(chat_name)
         state.INSIDE_MENU = False
         return
-    await print_menu()
 

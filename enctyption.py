@@ -1,7 +1,6 @@
 from typing import List
 import json
 from cryptography.fernet import Fernet
-import base64
 import logging
 
 from config import Chat
@@ -47,5 +46,5 @@ def decrypt_message(msg, encryptor: Encryptor):
                 raise Exception(f'Decrypted message has invalid id: {loaded_decrypted["id"]}, expected: {id}')
             return loaded_decrypted
         except Exception as ex:
-            logging.error(f'Failed to decrypt message {msg}: {ex}')
+            logging.debug(f'Failed to decrypt message {msg}: {ex}')
     return None

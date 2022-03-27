@@ -1,26 +1,11 @@
 import asyncio
 import state
-import config
-from enctyption import Encryptor
 from server import serve
-from network import handle_send
 import argparse
-from aioconsole import ainput, aprint
-import json
 import logging
-import sys
-from console import get_user_msg, get_user_menu_msg, print_menu, print_menu_sync
+from console import get_user_msg, get_user_menu_msg, print_menu_sync
 import signal
 from menu import handle_menu_input
-from menu import open_menu
-
-
-# async def get_active_chat():
-#     # TODO: skip if there is only one chat
-#     await aprint(">>> Print chat name you want to connect")
-#     chat_name = await get_user_msg()
-#     # TODO: validate chat name
-#     return chat_name
 
 
 def signal_handler(sig, frame):
@@ -32,13 +17,9 @@ signal.signal(signal.SIGINT, signal_handler)
 
 
 async def main():
-    # TODO
-    # config.config.active_chat = await get_active_chat()
-
     while True:
         try:
             if state.STOP:
-                print("STOP____")
                 return
             if state.INSIDE_MENU:
                 message = await get_user_menu_msg()
@@ -49,7 +30,6 @@ async def main():
                 continue
             if not message:
                 continue
-            # TODO: allow user to change active chat
             request = {
                 'type': 'MESSAGE',
                 'name': state.state.config.name,
