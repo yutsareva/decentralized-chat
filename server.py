@@ -2,6 +2,7 @@ import json
 import logging
 import websockets
 
+import bloom
 from console import print_peer_msg
 from enctyption import decrypt_message
 from history import save_msg, send_history, update_history
@@ -12,8 +13,12 @@ async def handle_receive(websocket):
     try:
         async for message in websocket:
             try:
+                if bloom.exists(message):
+                    continue
+                bloom.add_elem(message)
                 j = json.loads(message)
                 logging.debug(f"got msg: {j}")
+                await state.state.broadcast_request(j)
                 if j['type'] == 'MESSAGE':
                     decrypted = decrypt_message(j['encrypted'], state.state.encryptor)
                     if not decrypted:
@@ -24,8 +29,11 @@ async def handle_receive(websocket):
                         await send_history(decrypted['id'], state.state)
                         continue
 
-                    await save_msg(j['encrypted'], file_name=decrypted['id'])
                     j.update(decrypted)
+                    if state.state.it_is_me(int(j['port']), j['name']):
+                        continue
+
+                    await save_msg(j['encrypted'], file_name=decrypted['id'])
                     address, port = websocket.remote_address
                     if state.state.active_chat.id == j['id']:
                         await print_peer_msg(j['name'], address, port, j['port'], j['message'])
@@ -42,10 +50,6 @@ async def handle_receive(websocket):
                     address, _ = websocket.remote_address
                     await state.state.add_peer(address, j['port'])
                 elif j['type'] == 'HISTORY':
-                    # decrypted = decrypt_message(j['encrypted'], state.state.encryptor)
-                    # if not decrypted:
-                    #     continue
-                    # await update_history(decrypted)
                     await update_history(j, state.state)
             except Exception as ex:
                 logging.debug('Failed to handle message: ', ex)

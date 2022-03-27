@@ -15,8 +15,6 @@ loop = None
 class State:
     def __init__(self, config: Config):
         self.config = config
-        # TODO: select active chat
-        # TODO: check there is at least one chat
         self.active_chat = config.chats[0]
         self.peer_ws = {}
         self.encryptor = Encryptor(config.chats)
@@ -84,7 +82,9 @@ class State:
             if 'get_history' not in request:
                 await save_msg(encrypted_request['encrypted'], request['id'])
             request = encrypted_request
+        await self.broadcast_request(request)
 
+    async def broadcast_request(self, request):
         for address in list(self.peer_ws.keys()):
             try:
                 logging.debug(f'Sending request to {address}: {request}')
@@ -95,6 +95,9 @@ class State:
                 self.peer_ws.pop(address)
                 hostname, port = address.split(':')
                 await self.add_peer(hostname, port)
+
+    def it_is_me(self, port, name):
+        return self.config.port == port and self.config.name == name
 
 
 state = None

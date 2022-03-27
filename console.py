@@ -12,7 +12,8 @@ PEER_MSG = "\33[2K\r" + COLOR + "{name} > " + CEND + "{message}"
 MESSAGE_MENU_WAIT_STR = f"you > "
 MENU_STR = "\33[2K\r>>> To change chat print 'chat CHAT_NAME'" + \
            "\n>>> To exit print 'exit'" + \
-           "\n>>> To load chat history print 'load history'"
+           "\n>>> To load chat history print 'load history'" + \
+           "\n>>> To output chat history print 'show history'"
 
 
 async def print_peer_msg(peer_name, address, port, port2, message):

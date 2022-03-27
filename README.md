@@ -13,15 +13,20 @@ Scenario:
 
 Broadcast algorithm (partially implemented):
 - Gossip
-- When a peer gets a broadcast message, she checks if the message was received earlier
-   (via Bloom filter, which updates every 10 min)
+- When a peer gets a broadcast message, she checks if the message was received earlier (via Bloom filter)
 
-Persistence (not implemented yet):
-- Store chat history in ipfs
-- To recover chat history a user should remember chat data hash and at least one peer should hold the chat file in ipfs
+Persistence:
+- Store chat history locally
+- To recover chat history it should be stored at least one peer
 - Chat history is encrypted with the chat secret key
 
 Total order is not guaranteed.
+
+Menu options (press Cntl+C):
+- print 'chat CHAT_NAME' to change chat name
+- print 'exit' to exit
+- print 'load history' to send request for receiving chat history
+- print 'show history' to output chat history
 
 How to run:
 ```bash
