@@ -9,8 +9,9 @@ from aioconsole import ainput, aprint
 import json
 import logging
 import sys
-from console import get_user_msg
+from console import get_user_msg, get_user_menu_msg, print_menu, print_menu_sync
 import signal
+from menu import handle_menu_input
 from menu import open_menu
 
 
@@ -22,16 +23,12 @@ from menu import open_menu
 #     return chat_name
 
 
-
 def signal_handler(sig, frame):
-    open_menu()
-    exit(0)
+    state.INSIDE_MENU = True
+    print_menu_sync()
 
 
 signal.signal(signal.SIGINT, signal_handler)
-# print('Press Ctrl+C')
-# signal.pause()
-
 
 
 async def main():
@@ -40,7 +37,16 @@ async def main():
 
     while True:
         try:
-            message = await get_user_msg()
+            if state.STOP:
+                print("STOP____")
+                return
+            if state.INSIDE_MENU:
+                message = await get_user_menu_msg()
+            else:
+                message = await get_user_msg()
+            if state.INSIDE_MENU:
+                await handle_menu_input(message)
+                continue
             if not message:
                 continue
             # TODO: allow user to change active chat
@@ -61,7 +67,6 @@ if __name__ == "__main__":
     parser.add_argument('--config', help='path to configuration file', required=True)
     parser.add_argument('--debug', help='Print debug logs', action='store_true')
 
-    # parser.add_argument('--port', help='port to start your server on', default=30127)
     args = parser.parse_args()
 
     if args.debug:
@@ -69,9 +74,8 @@ if __name__ == "__main__":
         root.setLevel(logging.DEBUG)
         logging.debug('Set debug logging')
 
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(asyncio.wait([state.initialize_state(args.config)]))
+    state.loop = asyncio.get_event_loop()
+    state.loop.run_until_complete(asyncio.wait([state.initialize_state(args.config)]))
 
-    loop.run_until_complete(serve())
-    loop.create_task(main())
-    loop.run_forever()
+    state.loop.run_until_complete(serve())
+    state.loop.run_until_complete(main())

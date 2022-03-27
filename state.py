@@ -8,6 +8,10 @@ from network import connect, handle_send
 import sys
 
 
+INSIDE_MENU = False
+STOP = False
+loop = None
+
 class State:
     def __init__(self, config: Config):
         self.config = config
@@ -16,6 +20,19 @@ class State:
         self.active_chat = config.chats[0]
         self.peer_ws = {}
         self.encryptor = Encryptor(config.chats)
+
+    def set_active_chat(self, chat_name):
+        chat = self.find_chat(chat_name)
+        if chat is not None:
+            self.active_chat = chat
+        else:
+            logging.debug('No chat with name: ', chat_name)
+
+    def find_chat(self, chat_name):
+        for chat in self.config.chats:
+            if chat.name == chat_name:
+                return chat
+        return None
 
     async def connect_peers(self):
         for p in self.config.peers:
@@ -77,3 +94,4 @@ async def initialize_state(config_file_name: str):
     global state
     state = State(await get_config_from_file(config_file_name))
     await state.connect_peers()
+

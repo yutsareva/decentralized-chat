@@ -9,6 +9,10 @@ MESSAGE_WAIT_STR = f"{CRED}you > {CEND}"
 PEER_MSG = "\33[2K\r" + COLOR + "{name} > " + CEND + "{message}"
 # PEER_MSG = "\33[2K\r" + COLOR + "{name} [{address}:{port} ({port2})] > " + CEND + "{message}"
 
+MESSAGE_MENU_WAIT_STR = f"you > "
+MENU_STR = "\33[2K\r>>> To change chat print 'chat CHAT_NAME'" + \
+    "\n>>> To exit print 'exit'"
+
 
 async def print_peer_msg(peer_name, address, port, port2, message):
     color = COLOURS[abs(hash(peer_name)) % len(COLOURS)]
@@ -19,3 +23,16 @@ async def print_peer_msg(peer_name, address, port, port2, message):
 
 async def get_user_msg():
     return await ainput(MESSAGE_WAIT_STR)
+
+
+async def print_menu():
+    await aprint(MENU_STR, end=f"\n{MESSAGE_MENU_WAIT_STR}")
+    # return await ainput(MESSAGE_MENU_WAIT_STR)
+
+
+def print_menu_sync():
+    print(MENU_STR, end=f"\n{MESSAGE_MENU_WAIT_STR}")
+
+
+async def get_user_menu_msg():
+    return await ainput(MESSAGE_MENU_WAIT_STR)
