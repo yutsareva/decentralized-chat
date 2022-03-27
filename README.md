@@ -21,6 +21,8 @@ Persistence (not implemented yet):
 - To recover chat history a user should remember chat data hash and at least one peer should hold the chat file in ipfs
 - Chat history is encrypted with the chat secret key
 
+Total order is not guaranteed.
+
 How to run:
 ```bash
 python3 main.py --config config_examples/alice.json

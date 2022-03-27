@@ -5,7 +5,6 @@ import logging
 from config import Config, get_config_from_file
 from enctyption import encrypt_request, Encryptor
 from network import connect, handle_send
-import sys
 
 
 INSIDE_MENU = False

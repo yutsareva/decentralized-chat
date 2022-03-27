@@ -1,8 +1,7 @@
-from typing import List
-
 import aiofiles
 from dataclasses import dataclass
 import json
+from typing import List
 
 
 @dataclass

@@ -1,17 +1,6 @@
 from console import print_menu
 import logging
 import state
-import asyncio
-import signal
-
-async def open_menu():
-    await print_menu()
-    # inp = await print_menu()
-    # if inp == 'exit':
-    #     exit(0)
-    # # elif inp == ''
-    # # TODO
-    # exit(0)
 
 
 async def handle_menu_input(message):

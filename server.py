@@ -1,12 +1,11 @@
-import asyncio
-import websockets
 import json
-from aioconsole import ainput, aprint
-import state
-import config
 import logging
+import websockets
+
 from console import print_peer_msg
 from enctyption import decrypt_message
+from history import save_msg
+import state
 
 
 async def handle_receive(websocket):
@@ -19,10 +18,11 @@ async def handle_receive(websocket):
                     decrypted = decrypt_message(j['encrypted'], state.state.encryptor)
                     if not decrypted:
                         continue
+                    await save_msg(j)
                     j.update(decrypted)
-                    #  TODO: print only active chat messages to stdout, the rest to files
                     address, port = websocket.remote_address
-                    await print_peer_msg(j['name'], address, port, j['port'], j['message'])
+                    if state.state.active_chat.id == j['id']:
+                        await print_peer_msg(j['name'], address, port, j['port'], j['message'])
 
                     await state.state.add_peer(address, j['port'])
                     # ws = await connect(address, j['port'])

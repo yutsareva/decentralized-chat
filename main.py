@@ -1,11 +1,12 @@
-import asyncio
-import state
-from server import serve
 import argparse
+import asyncio
 import logging
-from console import get_user_msg, get_user_menu_msg, print_menu_sync
 import signal
+
+from console import get_user_msg, get_user_menu_msg, print_menu_sync
 from menu import handle_menu_input
+from server import serve
+import state
 
 
 def signal_handler(sig, frame):
