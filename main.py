@@ -10,6 +10,8 @@ import json
 import logging
 import sys
 from console import get_user_msg
+import signal
+from menu import open_menu
 
 
 # async def get_active_chat():
@@ -18,6 +20,18 @@ from console import get_user_msg
 #     chat_name = await get_user_msg()
 #     # TODO: validate chat name
 #     return chat_name
+
+
+
+def signal_handler(sig, frame):
+    open_menu()
+    exit(0)
+
+
+signal.signal(signal.SIGINT, signal_handler)
+# print('Press Ctrl+C')
+# signal.pause()
+
 
 
 async def main():

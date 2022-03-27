@@ -1,5 +1,6 @@
 import websockets
 
+
 async def handle_send(websocket, message):
     await websocket.send(message)
 
