@@ -18,7 +18,7 @@ async def handle_receive(websocket):
                     decrypted = decrypt_message(j['encrypted'], state.state.encryptor)
                     if not decrypted:
                         continue
-                    await save_msg(j)
+                    await save_msg(j, file_name=decrypted['id'])
                     j.update(decrypted)
                     address, port = websocket.remote_address
                     if state.state.active_chat.id == j['id']:

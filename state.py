@@ -4,6 +4,7 @@ import logging
 
 from config import Config, get_config_from_file
 from enctyption import encrypt_request, Encryptor
+from history import save_msg
 from network import connect, handle_send
 
 
@@ -72,7 +73,9 @@ class State:
 
     async def broadcast(self, request):
         if request['type'] == 'MESSAGE':
-            request = encrypt_request(request, self.active_chat, self.encryptor)
+            encrypted_request = encrypt_request(request, self.active_chat, self.encryptor)
+            await save_msg(encrypted_request, request['id'])
+            request = encrypted_request
 
         for address, ws in self.peer_ws.items():
             try:
