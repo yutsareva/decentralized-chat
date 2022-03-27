@@ -1,4 +1,5 @@
 from console import print_menu
+from history import print_history
 import logging
 import state
 
@@ -22,6 +23,8 @@ async def handle_menu_input(message):
             'id': state.state.active_chat.id
         }
         await state.state.broadcast(request)
+    elif message == 'show history':
+        await print_history(state.state)
     state.INSIDE_MENU = False
     return
 

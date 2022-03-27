@@ -21,7 +21,7 @@ async def handle_receive(websocket):
                     if 'get_history' in decrypted:
                         address, port = websocket.remote_address
                         await state.state.add_peer(address, decrypted['port'])
-                        await send_history(decrypted['id'])
+                        await send_history(decrypted['id'], state.state)
                         continue
 
                     await save_msg(j['encrypted'], file_name=decrypted['id'])
@@ -46,7 +46,7 @@ async def handle_receive(websocket):
                     # if not decrypted:
                     #     continue
                     # await update_history(decrypted)
-                    await update_history(j)
+                    await update_history(j, state.state)
             except Exception as ex:
                 logging.debug('Failed to handle message: ', ex)
     except Exception as ex:
