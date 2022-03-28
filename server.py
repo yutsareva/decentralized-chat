@@ -30,7 +30,7 @@ async def handle_receive(websocket):
                         continue
 
                     j.update(decrypted)
-                    if state.state.it_is_me(int(j['port']), j['name']):
+                    if state.state.it_is_me(j['port'], j['name']):
                         continue
 
                     await save_msg(j['encrypted'], file_name=decrypted['id'])

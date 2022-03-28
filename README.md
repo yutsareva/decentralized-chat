@@ -11,7 +11,7 @@ Scenario:
 5. Everyone who knows the secret key (therefore belongs to the chat room) can decrypt the message
 6. A user can belong to several chats (know several secret keys)
 
-Broadcast algorithm (partially implemented):
+Broadcast algorithm:
 - Gossip
 - When a peer gets a broadcast message, she checks if the message was received earlier (via Bloom filter)
 
@@ -22,7 +22,7 @@ Persistence:
 
 Total order is not guaranteed.
 
-Menu options (press Cntl+C):
+Menu options (press Ctrl+C):
 - print 'chat CHAT_NAME' to change chat name
 - print 'exit' to exit
 - print 'load history' to send request for receiving chat history

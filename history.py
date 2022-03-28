@@ -5,8 +5,7 @@ import json
 import logging
 
 from console import print_peer_msg
-from enctyption import decrypt_message, encrypt_request
-# import state
+from enctyption import decrypt_message
 
 
 async def save_msg(text, file_name):
@@ -46,17 +45,19 @@ async def update_history(j, state):
             history.append(msg)
 
     history = list(set(history))
-
-    decrypted_history = []
+    decrypted_history_str = []
     for msg in history:
         decrypted = decrypt_message(msg, state.encryptor)
         if decrypted is not None:
-            decrypted_history.append(decrypted)
+            decrypted_history_str.append(json.dumps(decrypted))
+
+    decrypted_history_str = list(set(decrypted_history_str))
+    decrypted_history = []
+    for msg in decrypted_history_str:
+        decrypted_history.append(json.loads(msg))
     logging.debug(decrypted_history)
 
     decrypted_history.sort(key=lambda k: datetime.datetime.strptime(k['time'], '%Y-%m-%d %H:%M:%S'))
-
-    # chat = state.find_chat_by_id(j['id'])
 
     async with aiofiles.open(path, "w") as out:
         for line in decrypted_history:
@@ -71,12 +72,7 @@ async def print_history(state):
     async with aiofiles.open(path, mode='r') as f:
         async for msg in f:
             j = decrypt_message(msg, state.encryptor)
-            await print_peer_msg(j['name'], '', '', j['port'], j['message'])
-
-    # if state.state.active_chat.id == j['id']:
-    #     await print_peer_msg(j['name'], '', '', j['port'], j['message'])
-    # history = list(set(history))
-    #
-    # decrypted_history = []
-    # for msg in history:
-    #     decrypted = decrypt_message(msg, state.state.encryptor)
+            it_is_me = False
+            if state.it_is_me(j['port'], j['name']):
+                it_is_me = True
+            await print_peer_msg(j['name'], '', '', j['port'], j['message'], it_is_me, noend=True)

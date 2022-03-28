@@ -16,11 +16,16 @@ MENU_STR = "\33[2K\r>>> To change chat print 'chat CHAT_NAME'" + \
            "\n>>> To output chat history print 'show history'"
 
 
-async def print_peer_msg(peer_name, address, port, port2, message):
-    color = COLOURS[abs(hash(peer_name)) % len(COLOURS)]
+async def print_peer_msg(peer_name, address, port, port2, message, it_is_me=False, noend=False):
+    if it_is_me:
+        color = 91
+        peer_name = 'you'
+    else:
+        color = COLOURS[abs(hash(peer_name)) % len(COLOURS)]
+    end_str = "\n" if noend else f"\n{MESSAGE_WAIT_STR}"
     await aprint(PEER_MSG.format(
         color=color, name=peer_name, address=address, port=port, port2=port2, message=message),
-        end=f"\n{MESSAGE_WAIT_STR}")
+        end=end_str)
 
 
 async def get_user_msg():

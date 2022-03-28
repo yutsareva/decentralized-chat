@@ -1,6 +1,7 @@
 import asyncio
 import json
 import logging
+import random
 
 from config import Config, get_config_from_file
 from enctyption import encrypt_request, Encryptor
@@ -85,7 +86,9 @@ class State:
         await self.broadcast_request(request)
 
     async def broadcast_request(self, request):
-        for address in list(self.peer_ws.keys()):
+        keys = list(self.peer_ws.keys())
+        keys = random.sample(keys, min(max(5, round(len(keys) / 5)), len(keys)))
+        for address in keys:
             try:
                 logging.debug(f'Sending request to {address}: {request}')
                 # asyncio.create_task(handle_send(ws, json.dumps(request)))
