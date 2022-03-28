@@ -62,7 +62,6 @@ async def update_history(j, state):
     async with aiofiles.open(path, "w") as out:
         for line in decrypted_history:
             encrypted = state.encryptor.encrypt(j['id'], json.dumps(line))
-            # encrypted = encrypt_request(line, chat, state.encryptor)['encrypted']
             await out.write(f"{encrypted}\n")
         await out.flush()
 

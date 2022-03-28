@@ -39,9 +39,6 @@ async def handle_receive(websocket):
                         await print_peer_msg(j['name'], address, port, j['port'], j['message'])
 
                     await state.state.add_peer(address, j['port'])
-                    # ws = await connect(address, j['port'])
-                    # config.config.peer_ws[f"{address}:{j['port']}"] = ws
-                    # TODO: peer discovery
                 elif j['type'] == 'NEW_PEER':
                     address, port = websocket.remote_address
                     await state.state.add_peer(address, j['port'])
